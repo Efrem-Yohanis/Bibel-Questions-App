@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app1',
 ]
 
 MIDDLEWARE = [
@@ -51,10 +52,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'project1.urls'
 
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent  # Adjust according to your project structure
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Add your custom templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,4 +123,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+
+# URL to access static files
 STATIC_URL = '/static/'
+
+# Directory where static files will be collected (for production)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Directories where Django will look for additional static files
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]

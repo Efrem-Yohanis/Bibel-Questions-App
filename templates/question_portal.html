@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Questions</title>
+
+    <!-- Favicons -->
+    <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+    
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    
+    <!-- Template Main CSS File -->
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Manage Questions</h1>
+        
+        <a href="#" class="btn btn-primary m-2">Add New Question</a>
+        
+        <table id="questionsTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Question</th>
+                    <th>Testament Type</th>
+                    <th>Book Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example question entries -->
+                <tr>
+                    <td>1</td>
+                    <td>What is the capital of France?</td>
+                    <td>New Testament</td>
+                    <td>Matthew</td>
+                    <td>
+                        <a href="#" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>What is 2 + 2?</td>
+                    <td>Old Testament</td>
+                    <td>Genesis</td>
+                    <td>
+                        <a href="#" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                <!-- Add more question entries as needed -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Vendor JS Files -->
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#questionsTable').DataTable({
+                "pageLength": 10, // Display 10 rows per page
+                "searching": true // Enable searching
+            });
+        });
+    </script>
+</body>
+</html>

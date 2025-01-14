@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Question</title>
+
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+    <script>
+        function updateBookOptions() {
+            const categorySelect = document.getElementById('category');
+            const bookSelect = document.getElementById('book');
+            bookSelect.innerHTML = ''; // Clear existing options
+
+            const books = {
+                'OT': [
+                    'Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy',
+                    'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
+                    '1 Kings', '2 Kings', '1 Chronicles', '2 Chronicles',
+                    'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms',
+                    'Proverbs', 'Ecclesiastes', 'Song of Solomon', 'Isaiah',
+                    'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea',
+                    'Joel', 'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum',
+                    'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi'
+                ],
+                'NT': [
+                    'Matthew', 'Mark', 'Luke', 'John', 'Acts', 'Romans',
+                    '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians',
+                    'Philippians', 'Colossians', '1 Thessalonians', '2 Thessalonians',
+                    '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews',
+                    'James', '1 Peter', '2 Peter', '1 John', '2 John',
+                    '3 John', 'Jude', 'Revelation'
+                ]
+            };
+
+            const selectedCategory = categorySelect.value;
+            if (books[selectedCategory]) {
+                books[selectedCategory].forEach(function(book) {
+                    const option = document.createElement('option');
+                    option.value = book;
+                    option.textContent = book;
+                    bookSelect.appendChild(option);
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Add a New Question</h1>
+    <form method="post" action="{% url 'question_create' %}">
+        {% csrf_token %}
+        <div>
+            <label for="category">Category:</label>
+            <select id="category" name="category" onchange="updateBookOptions()">
+                <option value="OT">Old Testament</option>
+                <option value="NT">New Testament</option>
+            </select>
+        </div>
+        <div>
+            <label for="book">Book:</label>
+            <select id="book" name="book">
+                <option value="">Select a book</option>
+            </select>
+        </div>
+        <div>
+            <label for="question_text">Question:</label>
+            <input type="text" id="question_text" name="question_text" required>
+        </div>
+        <div>
+            <label for="answer_1">Choice 1:</label>
+            <input type="text" id="answer_1" name="answer_1" required>
+        </div>
+        <div>
+            <label for="answer_2">Choice 2:</label>
+            <input type="text" id="answer_2" name="answer_2" required>
+        </div>
+        <div>
+            <label for="answer_3">Choice 3:</label>
+            <input type="text" id="answer_3" name="answer_3" required>
+        </div>
+        <div>
+            <label for="answer_4">Choice 4:</label>
+            <input type="text" id="answer_4" name="answer_4" required>
+        </div>
+        <div>
+            <label for="correct_answer">Correct Answer:</label>
+            <input type="text" id="correct_answer" name="correct_answer" required>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
