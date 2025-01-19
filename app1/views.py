@@ -38,11 +38,13 @@ def question_detail(request, id):
     return render(request, 'question_detail.html', {'question': question})
 
 def quiz_home(request):
+   
+
     return render(request, 'quiz_home.html')
 
 def start_quiz(request):
-    old_testament_books = Question.objects.filter(category='Old').values_list('book', flat=True).distinct()
-    new_testament_books = Question.objects.filter(category='New').values_list('book', flat=True).distinct()
+    old_testament_books = Question.objects.filter(category='Old Testament').values_list('book', flat=True).distinct()
+    new_testament_books = Question.objects.filter(category='New Testament').values_list('book', flat=True).distinct()
 
     context = {
         'old_books': list(old_testament_books),
@@ -51,42 +53,51 @@ def start_quiz(request):
     return render(request, 'start_quiz.html', context)
 
 
-from django.shortcuts import render, redirect
-from .models import Question
+
 
 def quiz_taking(request, book_name):
-    # Assuming Question model has a 'book' field and 'correct_answer'
-    questions = Question.objects.filter(book=book_name).order_by('id')
-    question_index = int(request.POST.get('question_index', 0))
+    questions = Question.objects.filter(book=book_name)
+    question_index = int(request.POST.get('question_index', 0))  # Default to first question if not provided
 
+    selected_answer = None
+    feedback = None
+    is_correct = None
+
+    # If the form has been submitted
     if request.method == 'POST':
-        answer = int(request.POST.get('answer'))  # Assume answer is passed as an integer
-        current_question = questions[question_index]
-
-        # Check if the answer is correct
-        is_correct = answer == current_question.correct_answer
-
-        # Store the result for display
+        answer = int(request.POST.get('answer', 0))  # Get the selected answer from the form
+        current_question = questions[question_index]  # Get the current question
         selected_answer = answer
+        is_correct = (answer == current_question.correct_answer)  # Check if the selected answer is correct
 
-        # Move to the next question
-        question_index += 1
-    else:
-        selected_answer = None
-        is_correct = None
+        # Provide feedback based on correctness
+        if is_correct:
+            feedback = "Correct"  # Show correct feedback
+        else:
+            feedback = "Incorrect"  # Show incorrect feedback
 
+        # If the answer is correct, the user can move to the next question
+        if is_correct:
+            if 'next' in request.POST:
+                question_index += 1  # Increment the question index to go to the next question
+
+    # Check if there are more questions
     if question_index < len(questions):
-        question = questions[question_index]
-        choices = [1, 2, 3, 4]  # List of choice numbers
+        question = questions[question_index]  # Get the next question
+        choices = [1, 2, 3, 4]  # Choices for answers
         context = {
             'book_name': book_name,
             'question': question,
             'question_index': question_index,
+            'question_count': len(questions),
             'selected_answer': selected_answer,
             'is_correct': is_correct,
-            'choices': choices  # Pass the list of choices
+            'choices': choices,
+            'feedback': feedback,
         }
         return render(request, "quiz_taking.html", context)
+
+    # Redirect to the results page if all questions have been answered
     else:
         return redirect('quiz_results')
 
