@@ -19,47 +19,108 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
 </head>
 <body>
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'question_portal' %}">B.S Group</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_question' %}">Add New Questions</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Welcome, {{ user.username }}!
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mt-5">
-        <h1 class="text-center">Manage Questions</h1>
+        <div class="card">
+            <div class="card-body mt-3">
+                <h5 class="card-title text-center">Manage Questions</h5>
         
-        <a href="#" class="btn btn-primary m-2">Add New Question</a>
-        
-        <table id="questionsTable" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Question</th>
-                    <th>Testament Type</th>
-                    <th>Book Type</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Example question entries -->
-                <tr>
-                    <td>1</td>
-                    <td>What is the capital of France?</td>
-                    <td>New Testament</td>
-                    <td>Matthew</td>
-                    <td>
-                        <a href="#" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>What is 2 + 2?</td>
-                    <td>Old Testament</td>
-                    <td>Genesis</td>
-                    <td>
-                        <a href="#" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-                <!-- Add more question entries as needed -->
-            </tbody>
-        </table>
+                <table id="questionsTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Question</th>
+                            <th>Testament Type</th>
+                            <th>Book Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for question in Questions %}
+                        <tr>
+                            <td>{{ question.id }}</td>
+                            <td>{{ question.Question_text }}</td>
+                            <td>
+                                {% if question.category == "Old" %}
+                                    Old Testament
+                                {% else %}
+                                    New Testament
+                                {% endif %}
+                            </td>
+                            <td>{{ question.book }}</td>
+                            <td>
+                                <a href="#" class="btn btn-info btn-sm">View</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No questions available.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-lg-start bg-light text-muted">
+        <div class="container p-4">
+            <section>
+                <div class="row">
+                    <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+                        <h6 class="text-uppercase fw-bold mb-4">IT-Solution</h6>
+                        <p>We build websites for personal and business use.</p>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                        <h6 class="text-uppercase fw-bold mb-4">Links</h6>
+                        <p><a href="{% url 'question_portal' %}" class="text-reset">Home</a></p>
+                        <p><a href="{% url 'about_me' %}" class="text-reset">About</a></p>
+                        <p><a href="{% url 'contact' %}" class="text-reset">Contact</a></p>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        <p>Addis Ababa, Ethiopia</p>
+                        <p>efremyohanis116@gmail.com</p>
+                        <p>+251 707035315</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2025 YourBrand. All rights reserved.
+        </div>
+    </footer>
 
     <!-- Vendor JS Files -->
     <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

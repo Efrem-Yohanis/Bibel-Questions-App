@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Quiz App - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #34495e;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Bible Quiz App!</h1>
+    <p>Test your knowledge of the Bible with our fun and engaging quizzes. Choose from various books of the Bible and challenge yourself!</p>
+    <button onclick="startQuiz()">Start Quiz</button>
+
+    <script>
+        function startQuiz() {
+            // Navigate to the quiz selection page
+            window.location.href = "{% url 'start_quiz' %}";  // Change this to your quiz selection page
+        }
+    </script>
+</body>
+</html>

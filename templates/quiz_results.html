@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .results {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin: 10px 0;
+            text-align: left;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+
+        .missed {
+            font-weight: bold;
+            color: red;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            background-color: #3498db;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz Results</h1>
+    <div class="results">
+        <div class="score">You scored {{ score }} out of {{ total_questions }}</div>
+        
+        <h3>Your Answers:</h3>
+        {% for result in results %}
+            <div class="question {% if result.is_correct %}correct{% else %}incorrect{% endif %}">
+                <strong>Question {{ result.question_number }}:</strong> <br>
+                <strong>Your answer:</strong> {{ result.user_answer }} <br>
+                <strong>Correct answer:</strong> {{ result.correct_answer }}
+            </div>
+        {% endfor %}
+
+        {% if missed_questions %}
+            <h3>You missed the following questions:</h3>
+            <ul>
+                {% for question_num in missed_questions %}
+                    <li class="missed">Question {{ question_num }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div>Great job! You answered all questions correctly!</div>
+        {% endif %}
+    </div>
+
+    
+</body>
+</html>

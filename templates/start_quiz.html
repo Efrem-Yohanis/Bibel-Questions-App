@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Quiz App - Quiz Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+        }
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        a {
+            text-decoration: none;
+            color: #3498db;
+            display: block;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        a:hover {
+            background-color: #2980b9;
+            color: white;
+        }
+        .results-link {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select a Bible Book to Quiz</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Old Testament</th>
+                <th>New Testament</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if old_books or new_books %}
+                {% for old in old_books %}
+                <tr>
+                    <td><a href="{% url 'quiz_taking' old %}">{{ old }}</a></td>
+                    <td>
+                        {% if forloop.first and new_books %}
+                            {% for new in new_books %}
+                                <a href="{% url 'quiz_taking' new %}">{{ new }}</a><br>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if old_books|length == 0 %}
+                <tr>
+                    <td colspan="2">No Old Testament books available.</td>
+                </tr>
+                {% endif %}
+            {% else %}
+                <tr>
+                    <td colspan="2">There is no data inserted.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <!-- Vendor JS Files -->
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+  
+</body>
+</html>

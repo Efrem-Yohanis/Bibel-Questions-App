@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Taking</title>
+    {% load static %}
+    {% load custom_filters %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz on {{ book_name }}</h1>
+    <form method="POST" action="{% url 'quiz_taking' book_name=book_name %}">
+        {% csrf_token %}
+        <div>
+            <h3>{{ question.Question_text }}</h3>
+            {% for i in choices %}
+                <div>
+                    <input type="radio" name="answer" value="{{ i }}" id="choice{{ i }}"
+                        {% if selected_answer == i %} checked {% endif %}>
+                    <label for="choice{{ i }}">{{ question|get_choice:i }}</label>
+                    
+                    <!-- Show feedback after the form is submitted -->
+                    {% if selected_answer %}
+                        {% if selected_answer == i %}
+                            {% if is_correct %}
+                                <span class="correct"> ✔ Correct!</span>
+                            {% else %}
+                                <span class="incorrect"> X Incorrect</span>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <input type="hidden" name="book_name" value="{{ book_name }}">
+        <input type="hidden" name="question_index" value="{{ question_index }}">
+        <button type="submit">Next</button>
+    </form>
+    <a href="{% url 'quiz_home' %}">Back to Home</a>
+</body>
+</html>

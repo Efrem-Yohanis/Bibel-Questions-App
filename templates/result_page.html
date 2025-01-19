@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results</title>
+</head>
+<body>
+    <h1>Quiz Results</h1>
+    <div>Your Score: {{ score }} out of {{ total_questions }}</div>
+    
+    <h2>Your Answers:</h2>
+    <ul>
+        {% for result in results %}
+            <li>
+                Question {{ result.question_number }}: 
+                Your answer: {{ result.user_answer }} - 
+                Correct answer: {{ result.correct_answer }} 
+                {% if result.is_correct %}
+                    <strong>(Correct)</strong>
+                {% else %}
+                    <strong style="color: red;">(Incorrect)</strong>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if missed_questions %}
+        <h3>You missed the following questions:</h3>
+        <ul>
+            {% for question_num in missed_questions %}
+                <li>Question {{ question_num }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div>Great job! You answered all questions correctly!</div>
+    {% endif %}
+    
+    <a href="{% url 'quiz_home' %}">Retake Quiz</a>
+</body>
+</html>

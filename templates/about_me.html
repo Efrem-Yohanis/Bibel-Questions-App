@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+    
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    
+    <!-- Template Main CSS File -->
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+    <style>
+       
+       
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .highlight {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-left: 4px solid #007bff;
+            margin: 10px 0;
+        }
+       
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">B.S Group</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                  
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_question' %}">Add new Questions</a>
+                    </li>
+                   
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Welcome, {{ user.username }}!
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="#">Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="row mt-5">
+<div class="col-2"></div>
+<div class="col-8">
+    <div class="card p-5">
+
+
+        <h1>About Me</h1>
+        <p>
+            Hello! I am a <strong>software engineer</strong> specializing in <strong>web development</strong>. I create websites for businesses, individuals, and companies, aiming to deliver high-quality solutions that meet specific needs.
+        </p>
+        <div class="highlight">
+            My expertise includes:
+            <ul>
+                <li>Responsive web design</li>
+                <li>Custom web applications</li>
+                <li>eCommerce solutions</li>
+                <li>Content management systems</li>
+            </ul>
+        </div>
+        <p>
+            With a passion for technology and a keen eye for design, I strive to build user-friendly and efficient web applications. Whether you're looking for a personal website, a business platform, or a corporate solution, I am here to help bring your ideas to life.
+        </p>
+     
+    </div>
+.
+</div>
+    </div>
+    
+
+    <footer class="text-center text-lg-start bg-light text-muted">
+        <div class="container p-4">
+            <section class="">
+                <div class="row">
+                    <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+                        <h6 class="text-uppercase fw-bold mb-4">IT-Solution</h6>
+                        <p>
+                           We Builed website for personal for bussines 
+                        </p>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                        <h6 class="text-uppercase fw-bold mb-4">Links</h6>
+                        <p>
+                            <a href="{% url 'question_portal' %}" class="text-reset">Home</a>
+                        </p>
+                       
+                        <p>
+                            <a href="{% url 'about_me' %}" class="text-reset">About</a>
+                        </p>
+                        <p>
+                            <a href="{% url 'contact' %}" class="text-reset">Contact</a>
+                        </p>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        <p>Addis Ababa, Ethipoia</p>
+                        <p>efremyohanis116@gmail.com</p>
+                        <p></i>+251707035315</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2025 YourBrand. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+</html>

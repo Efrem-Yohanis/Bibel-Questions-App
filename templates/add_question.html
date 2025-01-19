@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions for {{ book }}</title>
+    
+    <!-- Favicons -->
+    <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+    <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/quill/quill.snow.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/quill/quill.bubble.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/simple-datatables/style.css' %}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+    <script>
+        function updateBookOptions() {
+            const categorySelect = document.getElementById('category');
+            const bookSelect = document.getElementById('book');
+            bookSelect.innerHTML = ''; // Clear existing options
+
+            const books = {
+                '1': [ // Old Testament Books
+                    'Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy',
+                    'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
+                    '1 Kings', '2 Kings', '1 Chronicles', '2 Chronicles', 'Ezra',
+                    'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs',
+                    'Ecclesiastes', 'Song of Solomon', 'Isaiah', 'Jeremiah', 'Lamentations',
+                    'Ezekiel', 'Daniel', 'Hosea', 'Joel', 'Amos',
+                    'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk',
+                    'Zephaniah', 'Haggai', 'Zechariah', 'Malachi'
+                ],
+                '2': [ // New Testament Books
+                    'Matthew', 'Mark', 'Luke', 'John', 'Acts',
+                    'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians',
+                    'Philippians', 'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy',
+                    '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
+                    '1 Peter', '2 Peter', '1 John', '2 John', '3 John',
+                    'Jude', 'Revelation'
+                ]
+            };
+
+            const selectedCategory = categorySelect.value;
+            if (books[selectedCategory]) {
+                books[selectedCategory].forEach(function(book) {
+                    const option = document.createElement('option');
+                    option.value = book;
+                    option.textContent = book;
+                    bookSelect.appendChild(option);
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'question_portal' %}">B.S Group</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                  
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_question' %}">Add new Questions</a>
+                    </li>
+                   
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Welcome, {{ user.username }}!
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="row mt-3">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Add New Question</h5>
+
+                    <!-- General Form Elements -->
+                    <form method="POST" action="{% url 'add_question' %}">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <label class="col-sm-12 col-form-label">Select Testament</label>
+                            <div class="col-sm-12">
+                                <select class="form-select" id="category" name="category" onchange="updateBookOptions()">
+                                    <option value="1">Old Testament</option>
+                                    <option value="2">New Testament</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label">Select Book</label>
+                            <div class="col-sm-12">
+                                <select class="form-select" id="book" name="book">
+                                    <option value="">Select a book</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="question" class="col-sm-2 col-form-label">Enter Question</label>
+                            <div class="col-sm-12">
+                                <textarea class="form-control" id="question" name="question" style="height: 100px"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="choice1" class="col-sm-2 col-form-label">Enter Choice 1</label>
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control" id="choice1" name="choice1" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="choice2" class="col-sm-2 col-form-label">Enter Choice 2</label>
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control" id="choice2" name="choice2" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="choice3" class="col-sm-2 col-form-label">Enter Choice 3</label>
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control" id="choice3" name="choice3" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="choice4" class="col-sm-2 col-form-label">Enter Choice 4</label>
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control" id="choice4" name="choice4" required>
+                            </div>
+                        </div>
+                       
+                        <div class="row mb-3">
+                            <label class="col-sm-12 col-form-label">Answer</label>
+                            <div class="col-sm-12">
+                                <select class="form-select" name="answer" aria-label="Default select example" required>
+                                    <option value="">Choose the correct answer</option>
+                                    <option value="0">Choice 1</option>
+                                    <option value="1">Choice 2</option>
+                                    <option value="2">Choice 3</option>
+                                    <option value="3">Choice 4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form><!-- End General Form Elements -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   <!-- Footer -->
+   <footer class="text-center text-lg-start bg-light text-muted">
+    <div class="container p-4">
+        <section class="">
+            <div class="row">
+                <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+                    <h6 class="text-uppercase fw-bold mb-4">IT-Solution</h6>
+                    <p>
+                       We Builed website for personal for bussines 
+                    </p>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <h6 class="text-uppercase fw-bold mb-4">Links</h6>
+                    <p>
+                        <a href="{% url 'question_portal' %}" class="text-reset">Home</a>
+                    </p>
+                   
+                    <p>
+                        <a href="{% url 'about_me' %}" class="text-reset">About</a>
+                    </p>
+                    <p>
+                        <a href="{% url 'contact' %}" class="text-reset">Contact</a>
+                    </p>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                    <p>Addis Ababa, Ethipoia</p>
+                    <p>efremyohanis116@gmail.com</p>
+                    <p></i>+251707035315</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2025 YourBrand. All rights reserved.
+    </div>
+</footer>
+
+    <!-- Vendor JS Files -->
+    <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/chart.js/chart.umd.js' %}"></script>
+    <script src="{% static 'assets/vendor/echarts/echarts.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/quill/quill.js' %}"></script>
+    <script src="{% static 'assets/vendor/simple-datatables/simple-datatables.js' %}"></script>
+    <script src="{% static 'assets/vendor/tinymce/tinymce.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+
+    <!-- Template Main JS File -->
+    <script src="{% static 'assets/js/main.js' %}"></script>
+</body>
+</html>

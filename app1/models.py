@@ -2,21 +2,23 @@ from django.db import models
 
 class Question(models.Model):
     CATEGORY_CHOICES = [
-        ('OT', 'Old Testament'),
-        ('NT', 'New Testament'),
+        ('Old Testament', 'Old Testament'),
+        ('New Testament', 'New Testament'),
+        # Add other categories as needed
     ]
-    
-    category = models.CharField(max_length=2, choices=CATEGORY_CHOICES)
-    book = models.CharField(max_length=50)
-    question_text = models.CharField(max_length=255)
+
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, blank=True)
+    book = models.CharField(max_length=100, blank=True)
+    Question_text = models.TextField()
+    choice1 = models.CharField(max_length=255, blank=True)
+    choice2 = models.CharField(max_length=255, blank=True)
+    choice3 = models.CharField(max_length=255, blank=True)
+    choice4 = models.CharField(max_length=255, blank=True)
+    correct_answer = models.PositiveSmallIntegerField()  # 1, 2, 3, or 4 to represent the correct choice
 
     def __str__(self):
-        return self.question_text
+        return self.Question_text
 
-class Choice(models.Model):
-    question = models.ForeignKey(Question, related_name='choices', on_delete=models.CASCADE)
-    text = models.CharField(max_length=255)
-    is_correct = models.BooleanField(default=False)  # Field to mark the correct answer
-
-    def __str__(self):
-        return self.text
+    class Meta:
+        verbose_name = "Question"
+        verbose_name_plural = "Questions"
