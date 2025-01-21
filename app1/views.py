@@ -46,11 +46,19 @@ def start_quiz(request):
     old_testament_books = Question.objects.filter(category='Old Testament').values_list('book', flat=True).distinct()
     new_testament_books = Question.objects.filter(category='New Testament').values_list('book', flat=True).distinct()
 
+    old_books = list(old_testament_books)
+    new_books = list(new_testament_books)
+
+    # Use zip to combine old and new books
+    combined_books = zip(old_books, new_books)
+
     context = {
-        'old_books': list(old_testament_books),
-        'new_books': list(new_testament_books),
+        'combined_books': combined_books,  # Pass the combined books to context
+        'old_books': old_books,
+        'new_books': new_books,
     }
     return render(request, 'start_quiz.html', context)
+
 
 def quiz_taking(request, book_name):
     questions = list(Question.objects.filter(book=book_name))  # Convert to list for indexing
@@ -72,7 +80,7 @@ def quiz_taking(request, book_name):
             if answer is not None:
                 selected_answer = answer
                 is_correct = (int(answer) == current_question.correct_answer)
-                feedback = "Correct" if is_correct else "Incorrect"
+                feedback = "Correct!" if is_correct else "Incorrect! Try again."
 
                 # Move to the next question only if the answer is correct
                 if is_correct:
@@ -81,7 +89,7 @@ def quiz_taking(request, book_name):
     # Check if there are more questions
     if question_index < len(questions):
         question = questions[question_index]
-        choices = [1, 2, 3, 4]  # Adjust based on your model
+        choices = current_question.choices.all()  # Assuming choices is a related field
         context = {
             'book_name': book_name,
             'question': question,
@@ -96,6 +104,7 @@ def quiz_taking(request, book_name):
 
     # Redirect to the results page if all questions have been answered
     return redirect('quiz_results')
+
 
 def quiz_results(request):
     if request.method == 'POST':

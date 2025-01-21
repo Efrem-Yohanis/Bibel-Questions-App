@@ -65,21 +65,32 @@
         </thead>
         <tbody>
             {% if old_books or new_books %}
-                {% for old in old_books %}
-                <tr>
-                    <td><a href="{% url 'quiz_taking' old %}">{{ old }}</a></td>
-                    <td>
-                        {% if forloop.first and new_books %}
-                            {% for new in new_books %}
-                                <a href="{% url 'quiz_taking' new %}">{{ new }}</a><br>
-                            {% endfor %}
-                        {% endif %}
-                    </td>
-                </tr>
+                {% for old, new in combined_books %}
+                    <tr>
+                        <td>
+                            {% if old %}
+                                <a href="{% url 'quiz_taking' old %}">{{ old }}</a>
+                            {% else %}
+                                No Old Testament book
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if new %}
+                                <a href="{% url 'quiz_taking' new %}">{{ new }}</a>
+                            {% else %}
+                                No New Testament book
+                            {% endif %}
+                        </td>
+                    </tr>
                 {% endfor %}
                 {% if old_books|length == 0 %}
                 <tr>
                     <td colspan="2">No Old Testament books available.</td>
+                </tr>
+                {% endif %}
+                {% if new_books|length == 0 %}
+                <tr>
+                    <td colspan="2">No New Testament books available.</td>
                 </tr>
                 {% endif %}
             {% else %}
