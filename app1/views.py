@@ -52,12 +52,9 @@ def start_quiz(request):
     }
     return render(request, 'start_quiz.html', context)
 
-
-
-
 def quiz_taking(request, book_name):
-    questions = Question.objects.filter(book=book_name)
-    question_index = int(request.POST.get('question_index', 0))  # Default to first question if not provided
+    questions = list(Question.objects.filter(book=book_name))  # Convert to list for indexing
+    question_index = int(request.POST.get('question_index', 0))
 
     selected_answer = None
     feedback = None
@@ -65,26 +62,26 @@ def quiz_taking(request, book_name):
 
     # If the form has been submitted
     if request.method == 'POST':
-        answer = int(request.POST.get('answer', 0))  # Get the selected answer from the form
-        current_question = questions[question_index]  # Get the current question
-        selected_answer = answer
-        is_correct = (answer == current_question.correct_answer)  # Check if the selected answer is correct
+        answer = request.POST.get('answer')  # Get the selected answer from the form
+        
+        # Check if the question index is within range
+        if 0 <= question_index < len(questions):
+            current_question = questions[question_index]
 
-        # Provide feedback based on correctness
-        if is_correct:
-            feedback = "Correct"  # Show correct feedback
-        else:
-            feedback = "Incorrect"  # Show incorrect feedback
+            # Only check the answer if one is provided
+            if answer is not None:
+                selected_answer = answer
+                is_correct = (int(answer) == current_question.correct_answer)
+                feedback = "Correct" if is_correct else "Incorrect"
 
-        # If the answer is correct, the user can move to the next question
-        if is_correct:
-            if 'next' in request.POST:
-                question_index += 1  # Increment the question index to go to the next question
+                # Move to the next question only if the answer is correct
+                if is_correct:
+                    question_index += 1
 
     # Check if there are more questions
     if question_index < len(questions):
-        question = questions[question_index]  # Get the next question
-        choices = [1, 2, 3, 4]  # Choices for answers
+        question = questions[question_index]
+        choices = [1, 2, 3, 4]  # Adjust based on your model
         context = {
             'book_name': book_name,
             'question': question,
@@ -98,10 +95,8 @@ def quiz_taking(request, book_name):
         return render(request, "quiz_taking.html", context)
 
     # Redirect to the results page if all questions have been answered
-    else:
-        return redirect('quiz_results')
+    return redirect('quiz_results')
 
-    
 def quiz_results(request):
     if request.method == 'POST':
         # Collect user answers from the form submission

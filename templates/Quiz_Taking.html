@@ -7,6 +7,104 @@
     {% load static %}
     {% load custom_filters %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Header Styles */
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .question-header {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        /* Question Text */
+        h3 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        /* Choices */
+        .choices {
+            margin: 20px 0;
+        }
+
+        .choice {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+            accent-color: #007bff; /* Modern browsers */
+        }
+
+        /* Feedback Message */
+        .feedback {
+            margin: 15px 0;
+            font-size: 16px;
+            color: #007bff; /* Correct feedback color */
+        }
+
+        .feedback p {
+            margin: 0;
+        }
+
+        /* Button Styles */
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Back to Home Link */
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <div class="quiz-container">
@@ -27,16 +125,6 @@
                             <input type="radio" name="answer" value="{{ i }}" id="choice{{ i }}"
                                 {% if selected_answer == i %} checked {% endif %}>
                             <label for="choice{{ i }}">{{ question|get_choice:i }}</label>
-
-                            {% if selected_answer %}
-                                {% if selected_answer == i %}
-                                    {% if is_correct %}
-                                        <span style="color: green;">✔ Correct</span>
-                                    {% else %}
-                                        <span style="color: red;">❌ Incorrect</span>
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
@@ -44,17 +132,22 @@
                 <!-- Display feedback message -->
                 {% if feedback %}
                     <div class="feedback">
-                        <p>{% if feedback == 'Correct' %}✔ Correct{% else %}❌ Incorrect{% endif %}</p>
+                        <p>{% if is_correct %}✔ Correct{% else %}❌ Incorrect{% endif %}</p>
                     </div>
                 {% endif %}
 
-                <!-- Hidden fields to keep track of the question index -->
                 <input type="hidden" name="book_name" value="{{ book_name }}">
                 <input type="hidden" name="question_index" value="{{ question_index }}">
 
-                <!-- Button label changes based on answer status -->
-                <button type="submit" name="{% if is_correct %}next{% else %}submit{% endif %}">
-                    {% if is_correct %}Next Question{% else %}Submit{% endif %}
+                <!-- Button logic -->
+                <button type="submit">
+                    {% if is_correct %}
+                        Next Question
+                    {% elif selected_answer %}
+                        Try Again
+                    {% else %}
+                        Submit
+                    {% endif %}
                 </button>
             </div>
         </form>
